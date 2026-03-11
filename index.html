@@ -23,7 +23,7 @@
       font-size: 32px;
     }
 
-    p.subtitle {
+    .subtitle {
       text-align: center;
       margin-top: 0;
       margin-bottom: 32px;
@@ -51,6 +51,12 @@
       border-radius: 12px;
       display: block;
       background: #000;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .card img:hover {
+      transform: scale(1.02);
     }
 
     .card h2 {
@@ -64,11 +70,48 @@
       line-height: 1.5;
       font-size: 14px;
     }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.88);
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal img {
+      max-width: 95vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      font-size: 36px;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
   <h1>Fencing GIF Gallery</h1>
-  <p class="subtitle">A collection of fencing motion GIFs</p>
+  <p class="subtitle">Click any GIF to preview it in a larger view.</p>
 
   <div class="gallery">
     <div class="card">
@@ -78,11 +121,49 @@
     </div>
 
     <div class="card">
-      <img src="trajectory_satellite.gif" alt="trajectory_satellite" />
-      <h2>Second GIF</h2>
-      <p>Add your description here.</p>
+      <img src="trajectory_satellite.gif" alt="Trajectory Satellite" />
+      <h2>Trajectory Satellite</h2>
+      <p>This GIF shows the trajectory result of the fencing motion experiment.</p>
     </div>
-
   </div>
+
+  <div class="modal" id="previewModal">
+    <span class="close-btn" id="closeModal">&times;</span>
+    <img id="previewImage" src="" alt="Preview" />
+  </div>
+
+  <script>
+    const modal = document.getElementById("previewModal");
+    const previewImage = document.getElementById("previewImage");
+    const closeModal = document.getElementById("closeModal");
+    const galleryImages = document.querySelectorAll(".card img");
+
+    galleryImages.forEach((img) => {
+      img.addEventListener("click", () => {
+        previewImage.src = img.src;
+        previewImage.alt = img.alt;
+        modal.classList.add("show");
+      });
+    });
+
+    closeModal.addEventListener("click", () => {
+      modal.classList.remove("show");
+      previewImage.src = "";
+    });
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.classList.remove("show");
+        previewImage.src = "";
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        modal.classList.remove("show");
+        previewImage.src = "";
+      }
+    });
+  </script>
 </body>
 </html>
