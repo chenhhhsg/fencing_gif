@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIF Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+    .container {
+      text-align: center;
+      padding: 24px;
+    }
+    img {
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+    }
+    .hint {
+      margin-top: 16px;
+      opacity: 0.8;
+      font-size: 14px;
+    }
+    code {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="trajectory_smc_rl.gif" alt="GIF preview" />
+    <div class="hint">Put your GIF in the same folder and name it <code>trajectory_smc_rl.gif</code>.</div>
+  </div>
+</body>
+</html>
