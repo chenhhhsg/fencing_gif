@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fencing GIF Gallery</title>
+  <title>Fencing Media Gallery</title>
   <style>
     * {
       box-sizing: border-box;
@@ -46,7 +46,8 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
-    .card img {
+    .card img,
+    .card video {
       width: 100%;
       border-radius: 12px;
       display: block;
@@ -55,7 +56,8 @@
       transition: transform 0.2s ease;
     }
 
-    .card img:hover {
+    .card img:hover,
+    .card video:hover {
       transform: scale(1.02);
     }
 
@@ -86,7 +88,8 @@
       display: flex;
     }
 
-    .modal img {
+    .modal img,
+    .modal video {
       max-width: 95vw;
       max-height: 90vh;
       border-radius: 12px;
@@ -110,58 +113,100 @@
   </style>
 </head>
 <body>
-  <h1>Fencing GIF Gallery</h1>
-  <p class="subtitle">Click any GIF to preview it in a larger view.</p>
+  <h1>Fencing Media Gallery</h1>
+  <p class="subtitle">Click any media to preview it in a larger view.</p>
 
   <div class="gallery">
     <div class="card">
-      <img src="trajectory_smc_rl.gif" alt="Trajectory SMC RL" />
-      <h2>Fencing trajectory of fives agents and one target</h2>
+      <img
+        class="media"
+        data-type="image"
+        src="trajectory_smc_rl.gif"
+        alt="Trajectory SMC RL"
+      />
+      <h2>Fencing trajectory of five agents and one target</h2>
       <p>This GIF shows the trajectory result of the fencing motion experiment.</p>
     </div>
 
     <div class="card">
-      <img src="STK.mp4" alt="Trajectory Satellite" />
+      <video class="media" data-type="video" muted>
+        <source src="STK.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
       <h2>Satellite fencing trajectory</h2>
-      <p>This GIF shows the satellite trajectory result of the fencing motion experiment.</p>
+      <p>This video shows the satellite trajectory result of the fencing motion experiment.</p>
     </div>
   </div>
 
   <div class="modal" id="previewModal">
     <span class="close-btn" id="closeModal">&times;</span>
-    <img id="previewImage" src="" alt="Preview" />
+
+    <img id="previewImage" src="" alt="Preview" style="display: none;" />
+
+    <video id="previewVideo" controls autoplay style="display: none;">
+      <source id="previewVideoSource" src="" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
   </div>
 
   <script>
     const modal = document.getElementById("previewModal");
     const previewImage = document.getElementById("previewImage");
+    const previewVideo = document.getElementById("previewVideo");
+    const previewVideoSource = document.getElementById("previewVideoSource");
     const closeModal = document.getElementById("closeModal");
-    const galleryImages = document.querySelectorAll(".card img");
+    const galleryMedia = document.querySelectorAll(".media");
 
-    galleryImages.forEach((img) => {
-      img.addEventListener("click", () => {
-        previewImage.src = img.src;
-        previewImage.alt = img.alt;
+    function closePreview() {
+      modal.classList.remove("show");
+
+      previewImage.style.display = "none";
+      previewImage.src = "";
+
+      previewVideo.pause();
+      previewVideo.style.display = "none";
+      previewVideoSource.src = "";
+      previewVideo.load();
+    }
+
+    galleryMedia.forEach((item) => {
+      item.addEventListener("click", () => {
+        const type = item.dataset.type;
+
+        if (type === "image") {
+          previewVideo.pause();
+          previewVideo.style.display = "none";
+          previewVideoSource.src = "";
+          previewVideo.load();
+
+          previewImage.src = item.src;
+          previewImage.alt = item.alt;
+          previewImage.style.display = "block";
+        } else if (type === "video") {
+          previewImage.style.display = "none";
+          previewImage.src = "";
+
+          const source = item.querySelector("source");
+          previewVideoSource.src = source.src;
+          previewVideo.load();
+          previewVideo.style.display = "block";
+        }
+
         modal.classList.add("show");
       });
     });
 
-    closeModal.addEventListener("click", () => {
-      modal.classList.remove("show");
-      previewImage.src = "";
-    });
+    closeModal.addEventListener("click", closePreview);
 
     modal.addEventListener("click", (event) => {
       if (event.target === modal) {
-        modal.classList.remove("show");
-        previewImage.src = "";
+        closePreview();
       }
     });
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        modal.classList.remove("show");
-        previewImage.src = "";
+        closePreview();
       }
     });
   </script>
